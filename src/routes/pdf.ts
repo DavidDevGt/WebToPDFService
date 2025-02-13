@@ -44,58 +44,70 @@ const router = express.Router();
  */
 router.get(
   "/pdf",
-  expressAsyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const parsedUrl = urlValidator.safeParse(req.query);
-      if (!parsedUrl.success) {
-        res.status(400).json({ error: parsedUrl.error.errors[0].message });
-        return;
-      }
-
-      let customOpts: { width?: number; height?: number } = {};
-      if (
-        req.query.width ||
-        req.query.height ||
-        req.query.expandScrolls ||
-        req.query.customCss ||
-        req.query.waitForSelectors
-      ) {
-        const optionsData = {
-          options: {
-            width: req.query.width ? parseInt(req.query.width as string, 10) : undefined,
-            height: req.query.height ? parseInt(req.query.height as string, 10) : undefined,
-            expandScrolls: req.query.expandScrolls ? req.query.expandScrolls === "true" : undefined,
-            customCss: req.query.customCss ? (req.query.customCss as string) : undefined,
-            waitForSelectors: req.query.waitForSelectors
-              ? Array.isArray(req.query.waitForSelectors)
-                ? req.query.waitForSelectors
-                : [req.query.waitForSelectors as string]
-              : undefined,
-          },
-        };
-
-        const parsedOptions = optionsValidator.safeParse(optionsData);
-        if (!parsedOptions.success) {
-          res.status(400).json({ error: parsedOptions.error.errors[0].message });
+  expressAsyncHandler(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      try {
+        const parsedUrl = urlValidator.safeParse(req.query);
+        if (!parsedUrl.success) {
+          res.status(400).json({ error: parsedUrl.error.errors[0].message });
           return;
         }
-        customOpts = {
-          width: parsedOptions.data.options.width,
-          height: parsedOptions.data.options.height,
-        };
+
+        let customOpts: { width?: number; height?: number } = {};
+        if (
+          req.query.width ||
+          req.query.height ||
+          req.query.expandScrolls ||
+          req.query.customCss ||
+          req.query.waitForSelectors
+        ) {
+          const optionsData = {
+            options: {
+              width: req.query.width
+                ? parseInt(req.query.width as string, 10)
+                : undefined,
+              height: req.query.height
+                ? parseInt(req.query.height as string, 10)
+                : undefined,
+              expandScrolls: req.query.expandScrolls
+                ? req.query.expandScrolls === "true"
+                : undefined,
+              customCss: req.query.customCss
+                ? (req.query.customCss as string)
+                : undefined,
+              waitForSelectors: req.query.waitForSelectors
+                ? Array.isArray(req.query.waitForSelectors)
+                  ? req.query.waitForSelectors
+                  : [req.query.waitForSelectors as string]
+                : undefined,
+            },
+          };
+
+          const parsedOptions = optionsValidator.safeParse(optionsData);
+          if (!parsedOptions.success) {
+            res
+              .status(400)
+              .json({ error: parsedOptions.error.errors[0].message });
+            return;
+          }
+          customOpts = {
+            width: parsedOptions.data.options.width,
+            height: parsedOptions.data.options.height,
+          };
+        }
+
+        const pdfBuffer = await generatePDF(parsedUrl.data.url, customOpts);
+
+        res.set({
+          "Content-Type": "application/pdf",
+          "Content-Disposition": 'attachment; filename="pagina.pdf"',
+        });
+        res.send(pdfBuffer);
+      } catch (error) {
+        next(error);
       }
-
-      const pdfBuffer = await generatePDF(parsedUrl.data.url, customOpts);
-
-      res.set({
-        "Content-Type": "application/pdf",
-        "Content-Disposition": 'attachment; filename="pagina.pdf"',
-      });
-      res.send(pdfBuffer);
-    } catch (error) {
-      next(error);
-    }
-  })
+    },
+  ),
 );
 
 export default router;

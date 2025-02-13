@@ -6,13 +6,13 @@
  * @returns {string} The formatted date as a string in the format HH:MM:SS.mmm.
  */
 export function getEccentricDateFormat(date?: Date) {
-    const now = date ?? new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
-  
-    return `${hours}:${minutes}:${seconds}.${milliseconds}`;
+  const now = date ?? new Date();
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  const milliseconds = String(now.getMilliseconds()).padStart(3, "0");
+
+  return `${hours}:${minutes}:${seconds}.${milliseconds}`;
 }
 
 /**
@@ -23,9 +23,9 @@ export function getEccentricDateFormat(date?: Date) {
  * @returns {string} The formatted date as a string in the format DD-MM-YYYY.
  */
 export function getNormalDateFormat(date?: Date) {
-    const now = date ?? new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${day}-${month}-${year}`;
+  const now = date ?? new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${day}-${month}-${year}`;
 }
