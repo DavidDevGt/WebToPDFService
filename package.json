@@ -1,0 +1,25 @@
+{
+  "name": "webtopdf-service",
+  "version": "1.0.0",
+  "description": "API that converts any website into a PDF file",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DavidDevGt",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.1",
+    "express": "^4.21.2",
+    "express-async-handler": "^1.2.0",
+    "pkgroll": "^2.8.2",
+    "prettier": "^3.5.0",
+    "puppeteer": "^24.2.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "zod": "^3.24.2"
+  }
+}
